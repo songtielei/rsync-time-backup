@@ -196,6 +196,18 @@ fn_parse_ssh() {
 			SSH_CMD="ssh -p $SSH_PORT ${SSH_USER}@${SSH_HOST}"
 		fi
 		SSH_SRC_FOLDER_PREFIX="${SSH_USER}@${SSH_HOST}:"
+    elif echo "$DEST_FOLDER"|grep -Eq '^[A-Za-z0-9\._%\+\-]+\:.+$'
+    then
+		SSH_SHORTCUT=$(echo "$DEST_FOLDER" | sed -E  's/^([A-Za-z0-9\._%\+\-]+)\:(.+)$/\1/')
+		SSH_DEST_FOLDER=$(echo "$DEST_FOLDER" | sed -E  's/^([A-Za-z0-9\._%\+\-]+)\:(.+)$/\2/')
+		SSH_CMD="ssh -p $SSH_PORT ${SSH_SHORTCUT}"
+        SSH_DEST_FOLDER_PREFIX="${SSH_SHORTCUT}:"
+    elif echo "$SRC_FOLDER"|grep -Eq '^[A-Za-z0-9\._%\+\-]+\:.+$'
+    then
+		SSH_SHORTCUT=$(echo "$SRC_FOLDER" | sed -E  's/^([A-Za-z0-9\._%\+\-]+)\:(.+)$/\1/')
+		SSH_SRC_FOLDER=$(echo "$SRC_FOLDER" | sed -E  's/^([A-Za-z0-9\._%\+\-]+)\:(.+)$/\2/')
+		SSH_CMD="ssh -p $SSH_PORT ${SSH_SHORTCUT}"
+        SSH_SRC_FOLDER_PREFIX="${SSH_SHORTCUT}:"
 	fi
 }
 
